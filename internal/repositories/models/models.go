@@ -20,20 +20,23 @@ type User struct {
 	FamilyName    *string            `json:"family_name"`
 	Email         string             `json:"email"`
 	EmailVerified *bool              `json:"email_verified"`
+	AvatarUrl     *string            `json:"avatar_url"`
 	CreatedAt     pgtype.Timestamptz `json:"created_at"`
 	UpdatedAt     pgtype.Timestamptz `json:"updated_at"`
 	Version       int32              `json:"version"`
 }
 
 type UserAuth struct {
-	ID        uuid.UUID          `json:"id"`
-	UserID    uuid.UUID          `json:"user_id"`
-	Value     string             `json:"value"`
-	Provider  string             `json:"provider"`
-	Active    bool               `json:"active"`
-	CreatedAt pgtype.Timestamptz `json:"created_at"`
-	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
-	Version   int32              `json:"version"`
+	ID           uuid.UUID          `json:"id"`
+	UserID       uuid.UUID          `json:"user_id"`
+	Value        string             `json:"value"`
+	Provider     string             `json:"provider"`
+	ProviderID   string             `json:"provider_id"`
+	ProviderData []byte             `json:"provider_data"`
+	Active       bool               `json:"active"`
+	CreatedAt    pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt    pgtype.Timestamptz `json:"updated_at"`
+	Version      int32              `json:"version"`
 }
 
 type UserSession struct {

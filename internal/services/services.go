@@ -11,11 +11,13 @@ import (
 type ServicesUtils struct {
 	logger *zerolog.Logger
 	wg     *sync.WaitGroup
+	config *config.Config
 }
 
 type Services struct {
-	utils       ServicesUtils
-	UserService *UserService
+	utils        ServicesUtils
+	UserService  *UserService
+	OAuthService *OAuthService
 }
 
 func (utils *ServicesUtils) background(fn func()) {
@@ -38,12 +40,15 @@ func NewServices(repositories *repositories.Repositories, cfg *config.Config, lo
 	utils := ServicesUtils{
 		logger: logger,
 		wg:     wg,
+		config: cfg,
 	}
 
 	userService := NewUserService(utils, repositories.UserRepository)
+	oAuthService := NewOAuthService(utils, userService, repositories.UserRepository)
 
 	return Services{
-		utils:       utils,
-		UserService: userService,
+		utils:        utils,
+		UserService:  userService,
+		OAuthService: oAuthService,
 	}
 }

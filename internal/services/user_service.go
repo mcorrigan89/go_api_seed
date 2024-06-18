@@ -2,14 +2,12 @@ package services
 
 import (
 	"context"
-	"time"
 
 	"corrigan.io/go_api_seed/internal/entities"
 	"corrigan.io/go_api_seed/internal/repositories"
 	"corrigan.io/go_api_seed/internal/usercontext"
 
 	"github.com/google/uuid"
-	"github.com/rs/xid"
 )
 
 type UserService struct {
@@ -65,7 +63,7 @@ type CreateUserArgs struct {
 
 func (service *UserService) CreateUser(ctx context.Context, args CreateUserArgs) (*entities.User, error) {
 	service.utils.logger.Info().Ctx(ctx).Interface("args", args).Msg("Creating user")
-	user, err := service.userRepository.CreateUserPassword(ctx, repositories.CreateUserArgs{
+	user, err := service.userRepository.CreateUserPassword(ctx, repositories.CreateUserPasswordArgs{
 		GivenName:  args.GivenName,
 		FamilyName: args.FamilyName,
 		Email:      args.Email,
@@ -93,11 +91,8 @@ func (service *UserService) AuthenticateWithPassword(ctx context.Context, email 
 		return nil, err
 	}
 
-	token := xid.New().String()
 	session, err := service.userRepository.CreateUserSession(ctx, repositories.CreateUserSessionArgs{
-		UserID:    user.ID,
-		Token:     token,
-		ExpiresAt: time.Now().Add(time.Hour * 24 * 30),
+		UserID: user.ID,
 	})
 	if err != nil {
 		service.utils.logger.Err(err).Ctx(ctx).Msg("Failed to create user session")

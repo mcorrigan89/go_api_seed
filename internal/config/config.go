@@ -18,6 +18,12 @@ type Config struct {
 	Cors struct {
 		TrustedOrigins []string
 	}
+	OAuth struct {
+		Google struct {
+			ClientID     string
+			ClientSecret string
+		}
+	}
 }
 
 func LoadConfig(cfg *Config) {
@@ -52,4 +58,19 @@ func LoadConfig(cfg *Config) {
 	cfg.DB.DSN = postgres_url
 
 	cfg.Cors.TrustedOrigins = []string{"http://localhost:3000"}
+
+	// Load OAuth
+	google_client_id := os.Getenv("GOOGLE_CLIENT_ID")
+	if google_client_id == "" {
+		log.Fatalf("GOOGLE_CLIENT_ID not available in .env")
+	}
+
+	google_client_secret := os.Getenv("GOOGLE_CLIENT_SECRET")
+	if google_client_secret == "" {
+		log.Fatalf("GOOGLE_CLIENT_SECRET not available in .env")
+	}
+
+	cfg.OAuth.Google.ClientID = google_client_id
+	cfg.OAuth.Google.ClientSecret = google_client_secret
+
 }
