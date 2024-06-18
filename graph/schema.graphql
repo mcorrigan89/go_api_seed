@@ -1,0 +1,57 @@
+interface GraphError {
+  message: String!
+  code: String!
+}
+
+type UserNotFound implements GraphError {
+  message: String!
+  code: String!
+}
+
+type User {
+  id: ID!
+  givenName: String
+  familyName: String
+  email: String!
+}
+
+union UserResult = User | UserNotFound
+
+type InvalidCredentials implements GraphError {
+  message: String!
+  code: String!
+}
+
+type UserSession {
+  token: String!
+  expiresAt: String!
+}
+
+union UserSessionResult = UserSession | UserNotFound | InvalidCredentials
+
+type Query {
+  me: UserResult!
+  userByID(id: ID!): UserResult!
+}
+
+input CreateUserPayload {
+  givenName: String
+  familyName: String
+  email: String!
+  password: String!
+}
+
+type EmailUnavailable implements GraphError {
+  message: String!
+  code: String!
+}
+
+union CreateUserResult = User | EmailUnavailable
+
+extend type Mutation {
+  createUser(payload: CreateUserPayload!): CreateUserResult!
+  authenticateWithPassword(
+    email: String!
+    password: String!
+  ): UserSessionResult!
+}
