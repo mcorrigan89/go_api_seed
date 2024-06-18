@@ -12,6 +12,7 @@ func UserSerializer(entity *entities.User) dto.User {
 		GivenName:  entity.GivenName,
 		FamilyName: entity.FamilyName,
 		Email:      entity.Email,
+		AvatarURL:  entity.AvatarUrl,
 	}
 
 	return response

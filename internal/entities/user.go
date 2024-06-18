@@ -45,6 +45,7 @@ type User struct {
 	GivenName  *string
 	FamilyName *string
 	Email      string
+	AvatarUrl  *string
 	userAuth   *UserAuth
 }
 
@@ -53,6 +54,7 @@ type NewUserEntityArgs struct {
 	GivenName  *string
 	FamilyName *string
 	Email      string
+	AvatarUrl  *string
 	UserAuth   *UserAuth
 }
 
@@ -62,6 +64,7 @@ func NewUserEntity(args NewUserEntityArgs) *User {
 		GivenName:  args.GivenName,
 		FamilyName: args.FamilyName,
 		Email:      args.Email,
+		AvatarUrl:  args.AvatarUrl,
 		userAuth:   args.UserAuth,
 	}
 }

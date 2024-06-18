@@ -13,6 +13,7 @@ type User {
   givenName: String
   familyName: String
   email: String!
+  avatarUrl: String
 }
 
 union UserResult = User | UserNotFound
@@ -54,4 +55,5 @@ extend type Mutation {
     email: String!
     password: String!
   ): UserSessionResult!
+  authenticateWithGoogleCode(code: String!): UserSessionResult!
 }

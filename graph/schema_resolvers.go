@@ -43,6 +43,18 @@ func (r *mutationResolver) AuthenticateWithPassword(ctx context.Context, email s
 	return &response, nil
 }
 
+// AuthenticateWithGoogleCode is the resolver for the authenticateWithGoogleCode field.
+func (r *mutationResolver) AuthenticateWithGoogleCode(ctx context.Context, code string) (dto.UserSessionResult, error) {
+	entity, err := r.services.OAuthService.LoginWithGoogleCode(ctx, code)
+	if err != nil {
+		r.logger.Err(err).Ctx(ctx).Msg("Authenticate with Google")
+		return serializers.UserSessionErrorSerializer(err)
+	}
+
+	response := serializers.UserSessionSerializer(entity)
+	return &response, nil
+}
+
 // Me is the resolver for the me field.
 func (r *queryResolver) Me(ctx context.Context) (dto.UserResult, error) {
 	user := usercontext.ContextGetUser(ctx)

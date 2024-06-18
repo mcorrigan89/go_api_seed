@@ -60,6 +60,7 @@ type User struct {
 	GivenName  *string `json:"givenName,omitempty"`
 	FamilyName *string `json:"familyName,omitempty"`
 	Email      string  `json:"email"`
+	AvatarURL  *string `json:"avatarUrl,omitempty"`
 }
 
 func (User) IsUserResult() {}
