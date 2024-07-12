@@ -1,3 +1,8 @@
+ifneq ("$(wildcard .env)","")
+	include .env
+	export $(shell sed 's/=.*//' .env)
+endif
+
 start:
 	./bin/main
 
@@ -24,3 +29,6 @@ migrate-up:
 
 migrate-down:
 	migrate -path=./migrations -database="postgres://admin:admin@localhost:5432/go_api_seed?sslmode=disable" down 1
+
+test-env:
+	@echo $(POSTGRES_URL)
