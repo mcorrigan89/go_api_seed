@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 COPY . .
 RUN go build -o=./bin/main ./cmd
 
-RUN make test-env
+RUN make migrate-up
 
 EXPOSE 9001
 

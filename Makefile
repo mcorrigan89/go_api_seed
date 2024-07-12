@@ -25,10 +25,10 @@ migrate-create:
 	migrate create -ext sql -dir migrations -seq $(name)
 
 migrate-up:
-	migrate -path=./migrations -database="postgres://admin:admin@localhost:5432/go_api_seed?sslmode=disable" up
+	migrate -path=./migrations -database="$(POSTGRES_URL)" up
 
 migrate-down:
-	migrate -path=./migrations -database="postgres://admin:admin@localhost:5432/go_api_seed?sslmode=disable" down 1
+	migrate -path=./migrations -database="$(POSTGRES_URL)" down 1
 
 test-env:
 	@echo $(POSTGRES_URL)
