@@ -2,9 +2,13 @@ package main
 
 import (
 	"context"
+	"log"
 	"os"
 	"time"
 
+	"corrigan.io/go_api_seed/internal/config"
+	logWriter "github.com/newrelic/go-agent/v3/integrations/logcontext-v2/zerologWriter"
+	"github.com/newrelic/go-agent/v3/newrelic"
 	"github.com/rs/zerolog"
 )
 
@@ -50,17 +54,48 @@ func (h TracingHook) Run(e *zerolog.Event, level zerolog.Level, msg string) {
 	}
 }
 
-func getLogger() zerolog.Logger {
+func getLogger(cfg *config.Config) zerolog.Logger {
 
-	logger := zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339}).
-		With().
-		Timestamp().
-		Caller().
-		Stack().
-		Logger().
-		Hook(TracingHook{})
+	if cfg.Env == "local" {
+		logger := zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339}).
+			With().
+			Timestamp().
+			Caller().
+			Stack().
+			Logger().
+			Hook(TracingHook{})
 
-	zerolog.SetGlobalLevel(zerolog.InfoLevel)
+		zerolog.SetGlobalLevel(zerolog.InfoLevel)
 
-	return logger
+		return logger
+	} else {
+		newRelicApp, err := newrelic.NewApplication(
+			newrelic.ConfigAppName(cfg.Logging.NewRelicAppName),
+			newrelic.ConfigLicense(cfg.Logging.NewRelicLicenseKey),
+			newrelic.ConfigDistributedTracerEnabled(true),
+			newrelic.ConfigAppLogForwardingEnabled(true),
+			newrelic.ConfigAppLogDecoratingEnabled(true),
+			func(cfg *newrelic.Config) {
+				cfg.CustomInsightsEvents.Enabled = true
+				cfg.DistributedTracer.Enabled = true
+			},
+		)
+		if err != nil {
+			log.Fatalln("unable to create New Relic Application", err)
+		}
+
+		zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+
+		writer := logWriter.New(os.Stdout, newRelicApp)
+
+		logger := zerolog.New(writer).
+			With().
+			Timestamp().
+			Caller().
+			Stack().
+			Logger().
+			Hook(TracingHook{})
+
+		return logger
+	}
 }

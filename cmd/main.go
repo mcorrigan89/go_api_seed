@@ -23,7 +23,7 @@ func main() {
 
 	config.LoadConfig(&cfg)
 
-	logger := getLogger()
+	logger := getLogger(&cfg)
 
 	db, err := openDBPool(cfg, &logger)
 	if err != nil {

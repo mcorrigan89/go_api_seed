@@ -24,6 +24,10 @@ type Config struct {
 			ClientSecret string
 		}
 	}
+	Logging struct {
+		NewRelicAppName    string
+		NewRelicLicenseKey string
+	}
 }
 
 func LoadConfig(cfg *Config) {
@@ -72,5 +76,17 @@ func LoadConfig(cfg *Config) {
 
 	cfg.OAuth.Google.ClientID = google_client_id
 	cfg.OAuth.Google.ClientSecret = google_client_secret
+
+	new_relic_app_name := os.Getenv("NEW_RELIC_APP_NAME")
+	if new_relic_app_name == "" {
+		log.Fatalf("NEW_RELIC_APP_NAME not available in .env")
+	}
+	cfg.Logging.NewRelicAppName = new_relic_app_name
+
+	new_relic_license_key := os.Getenv("NEW_RELIC_LICENSE_KEY")
+	if new_relic_license_key == "" {
+		log.Fatalf("NEW_RELIC_LICENSE_KEY not available in .env")
+	}
+	cfg.Logging.NewRelicLicenseKey = new_relic_license_key
 
 }
