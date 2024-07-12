@@ -32,11 +32,11 @@ migrate-create:
 
 .PHONY: migrate-up
 migrate-up:
-	migrate -path=./migrations -database="$(POSTGRES_URL)" up
+	migrate -path=./migrations -database="$(POSTGRES_URL)?sslmode=disable" up
 
 .PHONY: migrate-down
 migrate-down:
-	migrate -path=./migrations -database="$(POSTGRES_URL)" down 1
+	migrate -path=./migrations -database="$(POSTGRES_URL)?sslmode=disable" down 1
 
 .PHONY: test-env
 test-env:
