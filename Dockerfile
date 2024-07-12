@@ -8,7 +8,6 @@ RUN go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate
 
 COPY . .
 RUN make migrate-up
-RUN make install-new-relic
 RUN go build -o=./bin/main ./cmd
 
 EXPOSE 9001
