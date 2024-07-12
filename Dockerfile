@@ -4,7 +4,7 @@ FROM golang:1.22
 WORKDIR /usr/src/app
 
 RUN apt update && apt install -y make
-RUN apt install -y migrate
+RUN apt-get install -y migrate
 
 COPY . .
 RUN go build -o=./bin/main ./cmd
