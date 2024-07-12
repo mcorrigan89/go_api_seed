@@ -75,10 +75,6 @@ func getLogger(cfg *config.Config) zerolog.Logger {
 			newrelic.ConfigDistributedTracerEnabled(true),
 			newrelic.ConfigAppLogForwardingEnabled(true),
 			newrelic.ConfigAppLogDecoratingEnabled(true),
-			func(cfg *newrelic.Config) {
-				cfg.CustomInsightsEvents.Enabled = true
-				cfg.DistributedTracer.Enabled = true
-			},
 		)
 		if err != nil {
 			log.Fatalln("unable to create New Relic Application", err)
