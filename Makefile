@@ -41,3 +41,7 @@ migrate-down:
 .PHONY: test-env
 test-env:
 	@echo $(POSTGRES_URL)
+
+.PHONY: install-new-relic
+install-new-relic:
+	curl -Ls https://download.newrelic.com/install/newrelic-cli/scripts/install.sh | bash && sudo NEW_RELIC_API_KEY=$(NEW_RELIC_API_KEY) NEW_RELIC_ACCOUNT_ID=$(NEW_RELIC_ACCOUNT_ID) /usr/local/bin/newrelic install -n logs-integration
